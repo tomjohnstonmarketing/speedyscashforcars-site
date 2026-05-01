@@ -9,14 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // TODO: Replace with Speedy's real brand colors once confirmed.
+        // Speedy's brand: hunter/forest green from the existing logo.
         brand: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          500: "#f97316", // primary orange — confident, action-forward
-          600: "#ea580c",
-          700: "#c2410c",
-          900: "#7c2d12",
+          50: "#ecfaef",
+          100: "#d3f3d8",
+          500: "#2d7a3e", // primary forest green — matches Speedy's logo
+          600: "#226430",
+          700: "#1a4f25",
+          900: "#0d2c14",
         },
         ink: {
           900: "#0b1220",

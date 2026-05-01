@@ -1,0 +1,12 @@
+<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Speedy's Cash For Cars">
+  <g fill="#2d7a3e">
+    <path d="M 10 70 Q 12 60 22 56 L 38 50 Q 50 36 70 30 L 110 20 Q 138 16 166 22 Q 188 30 210 44 L 210 80 L 10 80 Z" transform="scale(0.95)"/>
+    <path d="M 70 38 Q 84 26 108 22 L 138 18 Q 158 16 174 22 Q 188 30 198 40 L 198 46 L 70 46 Z" fill="#ffffff" opacity="0.92" transform="scale(0.95)"/>
+    <line x1="100" y1="22" x2="100" y2="46" stroke="#2d7a3e" stroke-width="3" transform="scale(0.95)"/>
+    <line x1="138" y1="20" x2="138" y2="46" stroke="#2d7a3e" stroke-width="3" transform="scale(0.95)"/>
+    <circle cx="55" cy="76" r="13" fill="#0b1220"/>
+    <circle cx="55" cy="76" r="5" fill="#2d7a3e"/>
+    <circle cx="160" cy="76" r="13" fill="#0b1220"/>
+    <circle cx="160" cy="76" r="5" fill="#2d7a3e"/>
+  </g>
+</svg>

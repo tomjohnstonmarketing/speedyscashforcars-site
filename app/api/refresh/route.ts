@@ -23,25 +23,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
 
-  const csvUrl = process.env.ZOHO_LOCATIONS_CSV_URL;
-  if (!csvUrl) {
+  if (!process.env.AIRTABLE_TOKEN || !process.env.AIRTABLE_BASE_ID || !process.env.AIRTABLE_TABLE_ID) {
     return NextResponse.json(
-      { message: "ZOHO_LOCATIONS_CSV_URL is not configured." },
+      { message: "Airtable env vars are not configured (need AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID)." },
       { status: 500 },
     );
   }
 
   try {
-    const locations = await fetchZohoLocations(csvUrl);
+    const locations = await fetchZohoLocations();
     if (locations.length === 0) {
       return NextResponse.json(
-        { message: "Zoho returned zero rows — check the publish URL and column headers." },
+        { message: "Airtable returned zero rows — check that records exist and 'Active' is checked." },
         { status: 422 },
       );
     }
 
     const payload = {
-      source: "zoho" as const,
+      source: "zoho" as const, // legacy label; data now comes from Airtable
       generatedAt: new Date().toISOString(),
       locations,
     };
@@ -64,7 +63,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       ok: true,
-      message: "Zoho data imported and pages revalidated.",
+      message: "Airtable data imported and pages revalidated.",
       count: locations.length,
       generatedAt: payload.generatedAt,
     });

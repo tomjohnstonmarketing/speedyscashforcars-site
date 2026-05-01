@@ -1,0 +1,24 @@
+<svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Speedy's Cash For Cars">
+  <g fill="#3da354">
+    <path d="M 28 80 Q 8 60 14 38 Q 32 30 48 44 Q 52 60 42 76 Q 36 84 28 80 Z" opacity="0.95"/>
+    <path d="M 60 72 Q 50 50 60 32 Q 80 32 90 50 Q 86 68 76 76 Q 66 80 60 72 Z" opacity="0.85"/>
+    <path d="M 18 70 L 60 50" stroke="#3da354" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <g fill="#3da354">
+    <path d="M 30 110 Q 32 100 44 96 L 64 92 Q 78 76 102 70 L 152 56 Q 188 50 232 56 Q 270 64 296 80 L 332 96 L 360 100 Q 376 102 386 110 L 386 122 L 30 122 Z"/>
+    <path d="M 96 82 Q 110 70 138 64 L 188 56 Q 220 54 246 60 Q 272 68 290 80 L 290 86 L 96 86 Z" fill="#0b1220" opacity="0.65"/>
+    <line x1="170" y1="58" x2="170" y2="86" stroke="#3da354" stroke-width="3"/>
+    <line x1="226" y1="58" x2="226" y2="86" stroke="#3da354" stroke-width="3"/>
+    <ellipse cx="372" cy="100" rx="10" ry="4" fill="#ffffff" opacity="0.9"/>
+    <circle cx="106" cy="122" r="20" fill="#0b1220"/>
+    <circle cx="312" cy="122" r="20" fill="#0b1220"/>
+    <circle cx="106" cy="120" r="16" fill="#0b1220"/>
+    <circle cx="106" cy="120" r="6" fill="#3da354"/>
+    <circle cx="312" cy="120" r="16" fill="#0b1220"/>
+    <circle cx="312" cy="120" r="6" fill="#3da354"/>
+  </g>
+
+  <text x="260" y="170" font-family="Impact, Haettenschweiler, Arial Narrow, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">SPEEDY'S</text>
+  <text x="260" y="192" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="14" font-weight="700" fill="#3da354" text-anchor="middle" letter-spacing="6">CASH FOR JUNK CARS</text>
+</svg>

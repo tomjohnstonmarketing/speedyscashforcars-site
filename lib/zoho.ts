@@ -1,98 +1,133 @@
+/**
+ * Despite the filename, this module now fetches locations from Airtable.
+ * Kept as `lib/zoho.ts` to avoid breaking imports across the app.
+ *
+ * Required env vars:
+ *   AIRTABLE_TOKEN     — Personal Access Token (read scope, restricted to base)
+ *   AIRTABLE_BASE_ID   — e.g. appXXXXXXXXXXXXXX
+ *   AIRTABLE_TABLE_ID  — e.g. tblXXXXXXXXXXXXXX (the Locations table)
+ *
+ * Optional:
+ *   AIRTABLE_VIEW_ID   — pin to a specific Airtable view if you want
+ */
 import type { Location, LocationsData } from "./types";
 import { citySlug } from "./slug";
 
-export function parseCSV(text: string): Record<string, string>[] {
-  const rows: string[][] = [];
-  let cur = "";
-  let row: string[] = [];
-  let inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"' && text[i + 1] === '"') { cur += '"'; i++; }
-      else if (c === '"') { inQuotes = false; }
-      else { cur += c; }
-    } else {
-      if (c === '"') { inQuotes = true; }
-      else if (c === ",") { row.push(cur); cur = ""; }
-      else if (c === "\n") { row.push(cur); cur = ""; rows.push(row); row = []; }
-      else if (c === "\r") { /* skip */ }
-      else { cur += c; }
-    }
-  }
-  if (cur.length > 0 || row.length > 0) { row.push(cur); rows.push(row); }
-  if (rows.length === 0) return [];
-  const headers = rows[0].map((h) => h.trim());
-  return rows.slice(1)
-    .filter((r) => r.some((cell) => cell && cell.trim().length > 0))
-    .map((r) => {
-      const obj: Record<string, string> = {};
-      headers.forEach((h, idx) => { obj[h] = (r[idx] ?? "").trim(); });
-      return obj;
-    });
-}
+type AirtableRecord = {
+  id: string;
+  fields: Record<string, unknown>;
+};
 
-function pick(row: Record<string, string>, keys: string[]): string {
-  const lower: Record<string, string> = {};
-  Object.entries(row).forEach(([k, v]) => { lower[k.toLowerCase().trim()] = v; });
-  for (const k of keys) {
-    const v = lower[k.toLowerCase()];
-    if (v && v.length > 0) return v;
-  }
-  return "";
-}
+type AirtableListResponse = {
+  records?: AirtableRecord[];
+  offset?: string;
+};
 
-export function normalizeRow(row: Record<string, string>): Location | null {
-  const city = pick(row, ["City", "City Name"]);
-  const state = pick(row, ["State", "ST"]).toUpperCase().slice(0, 2);
+function airtableRecordToLocation(record: AirtableRecord): Location | null {
+  const f = record.fields ?? {};
+  const city = (f["City"] as string) || "";
+  const state = ((f["State"] as string) || "").toUpperCase().slice(0, 2);
   if (!city || !state) return null;
-  const address = pick(row, ["Street", "Street Address", "Address", "Address1"]);
-  const zip = pick(row, ["Zip", "Zip Code", "Postal Code", "Postcode"]);
-  const phone = pick(row, ["Phone", "Phone Number", "Tel", "Telephone"]);
-  const email = pick(row, ["Email", "E-mail"]);
-  const hours = pick(row, ["Hours", "Business Hours", "Open Hours"]);
-  const lat = parseFloat(pick(row, ["Latitude", "Lat"]));
-  const lng = parseFloat(pick(row, ["Longitude", "Lng", "Long"]));
-  const services = pick(row, ["Services", "Specialties"])
-    .split(/[,;|]/).map((s) => s.trim()).filter(Boolean);
-  const mapEmbedUrl = pick(row, ["Map Embed", "Map URL", "Google Maps"]);
-  const establishedYear = parseInt(pick(row, ["Established", "Founded", "Year"]), 10);
-  const reviewRating = parseFloat(pick(row, ["Rating", "Review Rating", "Stars"]));
-  const reviewCount = parseInt(pick(row, ["Reviews", "Review Count"]), 10);
+
+  const phone = (f["Phone"] as string) || "";
+  const email = (f["Email"] as string) || undefined;
+  const street = (f["Street"] as string) || "";
+  const zip = (f["Zip"] as string) || "";
+  const hours = (f["Hours"] as string) || undefined;
+  const mapEmbedUrl = (f["Map Embed URL"] as string) || undefined;
+
+  const lat = typeof f["Latitude"] === "number" ? (f["Latitude"] as number) : undefined;
+  const lng = typeof f["Longitude"] === "number" ? (f["Longitude"] as number) : undefined;
+  const establishedYear = typeof f["Established Year"] === "number" ? (f["Established Year"] as number) : undefined;
+  const reviewRating = typeof f["Rating"] === "number" ? (f["Rating"] as number) : undefined;
+  const reviewCount = typeof f["Review Count"] === "number" ? (f["Review Count"] as number) : undefined;
+
+  const services = Array.isArray(f["Services"]) ? (f["Services"] as string[]) : undefined;
 
   return {
     slug: citySlug(city, state),
     city,
     state,
-    address,
+    address: street,
     zip,
     phone,
-    email: email || undefined,
-    hours: hours || undefined,
-    lat: isFinite(lat) ? lat : undefined,
-    lng: isFinite(lng) ? lng : undefined,
-    services: services.length ? services : undefined,
-    mapEmbedUrl: mapEmbedUrl || undefined,
-    establishedYear: isFinite(establishedYear) ? establishedYear : undefined,
-    reviewRating: isFinite(reviewRating) ? reviewRating : undefined,
-    reviewCount: isFinite(reviewCount) ? reviewCount : undefined,
+    email,
+    hours,
+    lat,
+    lng,
+    services: services && services.length ? services : undefined,
+    mapEmbedUrl,
+    establishedYear,
+    reviewRating,
+    reviewCount,
   };
 }
 
-export async function fetchZohoLocations(url: string): Promise<Location[]> {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Zoho fetch failed (${res.status}): ${res.statusText}`);
-  const text = await res.text();
-  const rows = parseCSV(text);
-  const locations = rows.map(normalizeRow).filter((x): x is Location => !!x);
+/**
+ * Fetch all Active locations from the configured Airtable base.
+ * Handles pagination automatically (Airtable returns up to 100 records per page).
+ */
+export async function fetchZohoLocations(): Promise<Location[]> {
+  const token = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const tableId = process.env.AIRTABLE_TABLE_ID;
+
+  if (!token || !baseId || !tableId) {
+    throw new Error(
+      "Missing Airtable env vars. Set AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID.",
+    );
+  }
+
+  const base = `https://api.airtable.com/v0/${baseId}/${tableId}`;
+  const params = new URLSearchParams({
+    filterByFormula: "{Active}=TRUE()",
+    pageSize: "100",
+  });
+  if (process.env.AIRTABLE_VIEW_ID) {
+    params.set("view", process.env.AIRTABLE_VIEW_ID);
+  }
+
+  const all: Location[] = [];
+  let offset: string | undefined;
+
+  // Hard cap on pages so a misconfigured filter can't loop forever.
+  for (let page = 0; page < 50; page++) {
+    const url = offset
+      ? `${base}?${params.toString()}&offset=${encodeURIComponent(offset)}`
+      : `${base}?${params.toString()}`;
+
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Airtable fetch failed (${res.status}): ${body}`);
+    }
+
+    const data = (await res.json()) as AirtableListResponse;
+    for (const r of data.records ?? []) {
+      const loc = airtableRecordToLocation(r);
+      if (loc) all.push(loc);
+    }
+    offset = data.offset;
+    if (!offset) break;
+  }
+
+  // Dedupe by slug; keep first occurrence
   const seen = new Set<string>();
   const deduped: Location[] = [];
-  for (const loc of locations) {
-    if (!seen.has(loc.slug)) { seen.add(loc.slug); deduped.push(loc); }
+  for (const loc of all) {
+    if (!seen.has(loc.slug)) {
+      seen.add(loc.slug);
+      deduped.push(loc);
+    }
   }
   return deduped;
 }
 
+/** Load the compiled locations JSON (used at build time by pages/sitemap). */
 export async function loadLocationsData(): Promise<LocationsData> {
   const data = (await import("@/data/locations.json")).default as LocationsData;
   return data;

@@ -7,9 +7,8 @@ export default function Footer() {
     <footer className="mt-24 border-t border-ink-300/60 bg-ink-900 text-ink-300">
       <div className="container-x grid gap-10 py-12 md:grid-cols-4">
         <div>
-          <div className="mb-2 flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-brand-500 font-black text-white">S</span>
-            <span className="font-display text-lg text-white">{SITE.name}</span>
+          <div className="mb-2">
+            <img src="/logo-dark.svg" alt={SITE.name} className="h-14 w-auto" />
           </div>
           <p className="text-sm leading-6">{SITE.tagline}</p>
         </div>

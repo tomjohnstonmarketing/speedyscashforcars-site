@@ -25,9 +25,9 @@ export default function AdminPage() {
 
   return (
     <main className="container-x my-16 max-w-2xl">
-      <h1 className="font-display text-3xl">Admin — Refresh from Zoho</h1>
+      <h1 className="font-display text-3xl">Admin — Refresh from Airtable</h1>
       <p className="mt-2 text-ink-500">
-        Pulls your latest published Zoho sheet, rewrites the site's locations data,
+        Pulls the latest Locations table from Airtable, rewrites the site's locations data,
         and revalidates all location pages. Safe to click as often as you want.
       </p>
 
@@ -66,13 +66,13 @@ export default function AdminPage() {
       </div>
 
       <div className="mt-8 rounded-xl bg-ink-900/[0.02] p-5 text-sm text-ink-500">
-        <p><strong>First-time setup:</strong></p>
+        <p><strong>How this works:</strong></p>
         <ol className="mt-2 list-decimal space-y-1 pl-5">
-          <li>In Zoho Sheet: <em>File → Publish → Publish to web → CSV</em>. Copy the URL.</li>
-          <li>In Vercel project settings, set <code>ZOHO_LOCATIONS_CSV_URL</code> to that URL.</li>
-          <li>Set <code>ADMIN_REFRESH_SECRET</code> to a long random string.</li>
-          <li>Paste that secret above and click Refresh. Your pages update live.</li>
+          <li>Your team edits the <strong>Locations</strong> table in Airtable.</li>
+          <li>You (or anyone with the admin secret) come here and click Refresh.</li>
+          <li>The site re-fetches every Active row, regenerates location pages, and updates the homepage / sitemap.</li>
         </ol>
+        <p className="mt-3">Vercel env vars required: <code>AIRTABLE_TOKEN</code>, <code>AIRTABLE_BASE_ID</code>, <code>AIRTABLE_TABLE_ID</code>, <code>ADMIN_REFRESH_SECRET</code>.</p>
       </div>
     </main>
   );

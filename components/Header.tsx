@@ -6,10 +6,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 w-full border-b border-ink-300/60 bg-white/90 backdrop-blur">
       <div className="container-x flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 no-underline">
-          <span className="grid h-9 w-9 place-items-center rounded-md bg-brand-500 font-black text-white">S</span>
-          <span className="font-display text-xl tracking-tight text-ink-900">
-            {SITE.name}
-          </span>
+          <img src="/logo.svg" alt={SITE.name} className="h-12 w-auto" />
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           <Link className="text-sm font-medium text-ink-700 hover:text-brand-600 no-underline" href="/locations">Locations</Link>

@@ -12,7 +12,7 @@ export default function Hero({
 }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-900 to-ink-700 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(249,115,22,0.25),transparent_50%)]" aria-hidden />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(45,122,62,0.3),transparent_50%)]" aria-hidden />
       <div className="container-x relative grid gap-10 py-20 md:grid-cols-2 md:items-center md:py-28">
         <div>
           <p className="eyebrow text-brand-500 mb-3">{SITE.shortTagline}</p>
