@@ -1,7 +1,7 @@
 export const SITE = {
   name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Speedy's Cash For Cars",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://speedyscashforcars.com",
-  phone: process.env.NEXT_PUBLIC_PHONE ?? "1-800-SPEEDY-1",
+  phone: process.env.NEXT_PUBLIC_PHONE ?? "+1 (888) 712-7237",
   email: process.env.NEXT_PUBLIC_EMAIL ?? "quote@speedyscashforcars.com",
   tagline: "Top dollar for cars in any condition — paid on the spot, picked up for free.",
   shortTagline: "Fast cash. Free towing. Any condition.",
