@@ -1,0 +1,54 @@
+{
+  "source": "fallback",
+  "generatedAt": "2026-04-21T00:00:00.000Z",
+  "locations": [
+    {
+      "slug": "dallas-tx",
+      "city": "Dallas",
+      "state": "TX",
+      "address": "123 Speedy Way",
+      "zip": "75201",
+      "phone": "214-555-0100",
+      "email": "dallas@speedyscashforcars.com",
+      "hours": "Mon-Fri 8am-6pm, Sat 9am-3pm",
+      "lat": 32.7767,
+      "lng": -96.7970,
+      "services": ["Junk Cars", "Used Cars", "Wrecked Cars", "Trucks & SUVs"],
+      "establishedYear": 2012,
+      "reviewRating": 4.8,
+      "reviewCount": 427
+    },
+    {
+      "slug": "phoenix-az",
+      "city": "Phoenix",
+      "state": "AZ",
+      "address": "456 Quickbuy Blvd",
+      "zip": "85001",
+      "phone": "602-555-0150",
+      "email": "phoenix@speedyscashforcars.com",
+      "hours": "Mon-Sat 7am-7pm",
+      "lat": 33.4484,
+      "lng": -112.0740,
+      "services": ["Junk Cars", "Non-Running Cars", "Fleet Vehicles", "Motorcycles"],
+      "establishedYear": 2015,
+      "reviewRating": 4.9,
+      "reviewCount": 312
+    },
+    {
+      "slug": "atlanta-ga",
+      "city": "Atlanta",
+      "state": "GA",
+      "address": "789 Peachtree Yard",
+      "zip": "30303",
+      "phone": "404-555-0180",
+      "email": "atlanta@speedyscashforcars.com",
+      "hours": "Mon-Fri 8am-6pm, Sat 9am-2pm",
+      "lat": 33.7490,
+      "lng": -84.3880,
+      "services": ["Junk Cars", "Used Cars", "Vans", "Wrecked Cars"],
+      "establishedYear": 2018,
+      "reviewRating": 4.7,
+      "reviewCount": 215
+    }
+  ]
+}

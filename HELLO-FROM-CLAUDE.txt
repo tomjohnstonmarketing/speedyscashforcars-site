@@ -1,0 +1,2 @@
+If you can see this file in File Explorer, the path is correct.
+You can delete this once we've confirmed.
