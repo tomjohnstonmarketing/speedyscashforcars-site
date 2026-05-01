@@ -47,7 +47,7 @@ export default function AdminPage() {
           disabled={busy || !secret}
           className="btn-primary disabled:opacity-50"
         >
-          {busy ? "Refreshing…" : "Refresh locations from Zoho"}
+          {busy ? "Refreshing…" : "Refresh locations from Airtable"}
         </button>
 
         {result && (
